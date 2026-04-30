@@ -1,0 +1,11 @@
+[package]
+name = "week-tech-api"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+tokio = { version = "1.52.1", features = ["full"] }
+axum = "0.8.9"
+sqlx = { version = "0.8.6", features = ["runtime-tokio", "sqlite"] }
+jsonwebtoken = "10.3.0"
+argon2 = "0.5.3"
