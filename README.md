@@ -11,19 +11,15 @@ Rust · Axum · SQLx · SQLite · Railway
 | Method | Route              | Auth |
 |--------|--------------------|------|
 | POST   | /registrations     | —    |
-| POST   | /speakers          | —    |
 | POST   | /projects          | —    |
 | POST   | /checkin           | —    |
 | POST   | /admin/login       | —    |
 | GET    | /registrations     | JWT  |
-| GET    | /speakers          | JWT  |
 | GET    | /projects          | JWT  |
 
 ## Schema
 
 **registrations** — name, student_registration, course_name, course_period, coffee_break, checked_in
-
-**speakers** — name, phone, email, topic, bio, briefing, talk_duration
 
 **projects** — name, student_registration, project_name, description
 
