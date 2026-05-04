@@ -1,13 +1,17 @@
 use axum::{
-    routing:: get,
-    routing:: post,
+    routing::get,
+    routing::post,
     Router,
 };
 use sqlx::SqlitePool;
-
+use tokio::net::TcpListener;
+use dotenvy;
+use crate::handlers::admin_login;
+mod handlers;
 #[tokio::main]
 async fn main() {
-
+    dotenvy::dotenv().ok();
+    
     let connection =
         SqlitePool::connect("sqlite:db/weektech.db?mode=rwc")
             .await.expect("Failed while connecting to sqlite database");
@@ -15,10 +19,11 @@ async fn main() {
     let app = Router::new()
         .route("/register", get(handler))
         .route("/register", post(handler))
+        .route("/admin/login", post(admin_login::admin_login))
         .with_state(connection);
 
     let listener =
-        tokio::net::TcpListener::bind("0.0.0.0:3000")
+        TcpListener::bind("0.0.0.0:3000")
         .await.expect(
             "Failed while triying to establish port listener");
 
