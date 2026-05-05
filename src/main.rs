@@ -6,9 +6,10 @@ use axum::{
 use sqlx::SqlitePool;
 use tokio::net::TcpListener;
 use dotenvy;
-use crate::handlers::admin_login;
+use crate::{db::run_migrations, handlers::admin_login};
 mod handlers;
 mod models;
+mod db;
 #[tokio::main]
 async fn main() {
     dotenvy::dotenv().ok();
@@ -16,10 +17,13 @@ async fn main() {
     let connection =
         SqlitePool::connect("sqlite:db/weektech.db?mode=rwc")
             .await.expect("Failed while connecting to sqlite database");
+    run_migrations(&connection)
+        .await
+        .expect("Failed while running migrations");
 
     let app = Router::new()
-        .route("/register", get(handler))
-        .route("/register", post(handler))
+        .route("/registrations", get(handler))
+        .route("/registrations", post(handler))
         .route("/admin/login", post(admin_login::admin_login))
         .with_state(connection);
 

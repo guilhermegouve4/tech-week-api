@@ -24,8 +24,8 @@
 
 ```json
 {
-  "name": "string", // 255 characters maximo
-  "student_registration": 253579732, // 9 chars max
+  "submitter_name": "string", // 255 characters max
+  "submitter_registration": 253579732, // 9 chars max
   "project_name": "string", // 255 characters max
   "description": "string" // 500 characters max
 }
@@ -89,8 +89,8 @@
 [
   {
     "id": 1,
-    "name": "string", // 255 characters max
-    "student_registration": 253579732, // 9 chars max
+    "submitter_name": "string", // 255 characters max
+    "submitter_registration": 253579732, // 9 chars max
     "project_name": "string", // 255 characters max
     "description": "string" // 500 characters max
   }
