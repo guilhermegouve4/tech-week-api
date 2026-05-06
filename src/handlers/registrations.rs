@@ -1,0 +1,35 @@
+use crate::models::registration::Registration;
+use axum::http::StatusCode;
+use axum::response::{IntoResponse, Response};
+use axum::extract::{State, Json};
+use sqlx::SqlitePool;
+use serde_json::json;
+
+
+pub async fn register_student(
+    State(pool): State<SqlitePool>,
+    Json(body): Json<Registration>
+    )
+    -> Response {
+
+    if let Err(msg) = body.validate_registration() {
+        return (StatusCode::BAD_REQUEST, Json(json!({"error": msg}))).into_response();
+    }
+
+    let result = sqlx::query(
+        "INSERT INTO registrations (name, student_registration, course_name, course_period, coffee_break)
+         VALUES (?, ?, ?, ?, ?)"
+    )
+    .bind(&body.name)
+    .bind(body.student_registration)
+    .bind(&body.course_name)
+    .bind(body.course_period)
+    .bind(body.coffee_break as i32)
+    .execute(&pool)
+    .await;
+
+    match result {
+        Ok(_) => (StatusCode::CREATED, Json(json!({"message": "registered"}))).into_response(),
+        Err(_) => (StatusCode::INTERNAL_SERVER_ERROR, Json(json!({"error": "db_error"}))).into_response(),
+    }
+}

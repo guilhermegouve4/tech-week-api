@@ -6,7 +6,7 @@ use axum::{
 use sqlx::SqlitePool;
 use tokio::net::TcpListener;
 use dotenvy;
-use crate::{db::run_migrations, handlers::admin_login};
+use crate::{db::run_migrations, handlers::admin_login, handlers::registrations};
 mod handlers;
 mod models;
 mod db;
@@ -23,7 +23,7 @@ async fn main() {
 
     let app = Router::new()
         .route("/registrations", get(handler))
-        .route("/registrations", post(handler))
+        .route("/registrations", post(registrations::register_student))
         .route("/admin/login", post(admin_login::admin_login))
         .with_state(connection);
 
