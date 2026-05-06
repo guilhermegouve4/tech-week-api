@@ -1,7 +1,7 @@
 use crate::models::registration::Registration;
 use axum::http::StatusCode;
 use axum::response::{IntoResponse, Response};
-use axum::extract::{State, Json};
+use axum::extract::{State, Json, Path};
 use sqlx::SqlitePool;
 use serde_json::json;
 
@@ -31,5 +31,24 @@ pub async fn register_student(
     match result {
         Ok(_) => (StatusCode::CREATED, Json(json!({"message": "registered"}))).into_response(),
         Err(_) => (StatusCode::INTERNAL_SERVER_ERROR, Json(json!({"error": "db_error"}))).into_response(),
+    }
+}
+
+pub async fn delete_registration(
+    State(pool): State<SqlitePool>,
+    Path(ra): Path<u32>,
+) -> Response {
+    let result = sqlx::query("DELETE FROM registrations WHERE student_registration = ?")
+        .bind(ra)
+        .execute(&pool)
+        .await;
+
+    match result {
+        Ok(r) if r.rows_affected() == 0 =>
+            (StatusCode::NOT_FOUND, Json(json!({"error": "not_found"}))).into_response(),
+        Ok(_) =>
+            (StatusCode::OK, Json(json!({"message": "deleted"}))).into_response(),
+        Err(_) =>
+            (StatusCode::INTERNAL_SERVER_ERROR, Json(json!({"error": "db_error"}))).into_response(),
     }
 }

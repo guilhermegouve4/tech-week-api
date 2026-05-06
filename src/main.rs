@@ -1,6 +1,7 @@
 use axum::{
     routing::get,
     routing::post,
+    routing::delete,
     Router,
 };
 use sqlx::SqlitePool;
@@ -24,6 +25,7 @@ async fn main() {
     let app = Router::new()
         .route("/registrations", get(handler))
         .route("/registrations", post(registrations::register_student))
+        .route("/registrations/{ra}", delete(registrations::delete_registration))
         .route("/admin/login", post(admin_login::admin_login))
         .with_state(connection);
 
