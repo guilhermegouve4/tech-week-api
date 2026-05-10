@@ -1,43 +1,32 @@
-# week-tech-api
+# tech-week-api
 
-REST API for the Week Tech event — built with Rust, Axum and SQLite.
+REST API for the Week Tech event at Unicesumar — built with Rust, Axum and SQLite, with a focus on secure-by-default design.
 
 ## Stack
 
-Rust · Axum · SQLx · SQLite · Railway
+- **Rust** — memory safety and ownership guarantees without a garbage collector
+- **Axum + Tokio** — async web framework; handles concurrent I/O without blocking threads
+- **SQLx** — compile-time verified SQL queries, no ORM
+- **SQLite** — sufficient for a single-event workload
+- **Argon2id** — memory-hard password hashing; resistant to GPU brute-force attacks
+- **JWT (HS256)** — stateless authentication; token verified on every protected request via a custom Axum extractor
+- **tower-http** — CORS middleware
 
 ## Endpoints
 
-| Method | Route              | Auth |
-|--------|--------------------|------|
-| POST   | /registrations     | —    |
-| POST   | /projects          | —    |
-| POST   | /checkin           | —    |
-| POST   | /admin/login       | —    |
-| GET    | /registrations     | JWT  |
-| GET    | /projects          | JWT  |
+| Method | Route | Auth |
+|--------|-------|------|
+| POST | /registrations | — |
+| POST | /projects | — |
+| POST | /checkin | — |
+| POST | /admin/login | — |
+| GET | /registrations | JWT |
+| GET | /projects | JWT |
+| DELETE | /registrations/{ra} | JWT |
+| DELETE | /checkin/{ra} | JWT |
 
-## Schema
-
-**registrations** — name, student_registration, course_name, course_period, coffee_break, checked_in
-
-**projects** — id, submitter_name, submitter_registration, project_name, description
-
-## Como rodar localmente
+## Running locally
 
 ```bash
 cargo run
 ```
-
-## Decisões técnicas
-
-- **Axum + Tokio** — framework web assíncrono; async porque a API lida com múltiplas requisições de I/O concorrentes
-- **SQLx sem ORM** — SQL escrito na mão para controle total das queries
-- **JWT** — autenticação stateless para rotas admin; token retornado no login, enviado via `Authorization: Bearer`
-- **Argon2** — hash de senha do admin; escolhido sobre SHA-512 por ser intencionalmente lento (resistente a brute force)
-- **SQLite** — suficiente para um evento pontual; sem necessidade de infraestrutura de banco externa
-- **404 no checkin** — RA não encontrado retorna 404; `None` (Rust) mapeado para HTTP antes de responder ao frontend
-
-## Deploy
-
-Railway — variáveis de ambiente configuradas no painel do projeto.
