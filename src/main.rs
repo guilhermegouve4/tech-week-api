@@ -1,13 +1,11 @@
 use axum::{
-    routing::get,
-    routing::post,
-    routing::delete,
+    routing::{post, delete},
     Router,
 };
 use sqlx::SqlitePool;
 use tokio::net::TcpListener;
 use dotenvy;
-use crate::{db::run_migrations, handlers::admin_login, handlers::registrations};
+use crate::{db::run_migrations, handlers::{admin_login, registrations, checkin, projects}};
 mod handlers;
 mod models;
 mod db;
@@ -23,9 +21,11 @@ async fn main() {
         .expect("Failed while running migrations");
 
     let app = Router::new()
-        .route("/registrations", get(handler))
+        .route("/checkin", post(checkin::checkin))
+        .route("/checkin/{ra}", delete(checkin::undo_checkin))
         .route("/registrations", post(registrations::register_student))
         .route("/registrations/{ra}", delete(registrations::delete_registration))
+        .route("/projects", post(projects::create_project))
         .route("/admin/login", post(admin_login::admin_login))
         .with_state(connection);
 
@@ -38,8 +38,4 @@ async fn main() {
         "Failed while triying to build server.");
 
     
-}
-
-async fn handler() -> &'static str {
-    "ok"
 }
