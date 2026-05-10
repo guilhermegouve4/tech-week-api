@@ -16,12 +16,27 @@ pub async fn register_student(
         return (StatusCode::BAD_REQUEST, Json(json!({"error": msg}))).into_response();
     }
 
+    let exists = sqlx::query_scalar::<_, i64>(
+        "SELECT COUNT(*) FROM registrations WHERE student_registration = ?"
+    )
+    .bind(&body.student_registration)
+    .fetch_one(&pool)
+    .await;
+
+    match exists {
+        Ok(count) if count > 0 =>
+            return (StatusCode::BAD_REQUEST, Json(json!({"error": "ra_already_registered"}))).into_response(),
+        Err(_) =>
+            return (StatusCode::INTERNAL_SERVER_ERROR, Json(json!({"error": "db_error"}))).into_response(),
+        _ => {}
+    }
+
     let result = sqlx::query(
         "INSERT INTO registrations (name, student_registration, course_name, course_period, coffee_break)
          VALUES (?, ?, ?, ?, ?)"
     )
     .bind(&body.name)
-    .bind(body.student_registration)
+    .bind(&body.student_registration)
     .bind(&body.course_name)
     .bind(body.course_period)
     .bind(body.coffee_break as i32)
@@ -36,7 +51,7 @@ pub async fn register_student(
 
 pub async fn delete_registration(
     State(pool): State<SqlitePool>,
-    Path(ra): Path<u32>,
+    Path(ra): Path<String>,
 ) -> Response {
     let result = sqlx::query("DELETE FROM registrations WHERE student_registration = ?")
         .bind(ra)

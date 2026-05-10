@@ -5,7 +5,7 @@
 ```json
 {
   "name": "string", // 255 characters max
-  "student_registration": 253579732, // 9 chars max
+  "student_registration": "253579732", // string, exactly 9 digits
   "course_name": "string", // 255 characters max
   "course_period": 1, // min 1, max 12
   "coffee_break": false/true
@@ -16,7 +16,6 @@
 - `400` `{ "error": "missing_fields" }`
 - `400` `{ "error": "invalid_ra" }`
 - `400` `{ "error": "ra_already_registered" }`
-- `422` `{ "error": "student_registration: expected number" }`
 
 ---
 
@@ -25,7 +24,7 @@
 ```json
 {
   "submitter_name": "string", // 255 characters max
-  "submitter_registration": 253579732, // 9 chars max
+  "submitter_registration": "253579732", // string, exactly 9 digits
   "project_name": "string", // 255 characters max
   "description": "string" // 500 characters max
 }
@@ -41,7 +40,7 @@
 
 ```json
 {
-  "student_registration": 253579732 // - 9 chars max
+  "student_registration": "253579732" // string, exactly 9 digits
 }
 ```
 
@@ -72,7 +71,7 @@
 [
   {
     "name": "string", // 255 characters max
-    "student_registration": 253579732, // 9 chars max
+    "student_registration": "253579732", // string, exactly 9 digits
     "course_name": "string", // 255 characters max
     "course_period": 1, // min 1, max 12
     "coffee_break": false,
@@ -90,7 +89,7 @@
   {
     "id": 1,
     "submitter_name": "string", // 255 characters max
-    "submitter_registration": 253579732, // 9 chars max
+    "submitter_registration": "253579732", // string, exactly 9 digits
     "project_name": "string", // 255 characters max
     "description": "string" // 500 characters max
   }

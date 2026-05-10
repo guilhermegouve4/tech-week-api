@@ -3,7 +3,7 @@ use serde::Deserialize;
 #[derive(Deserialize)]
 pub struct Registration {
     pub name: String,
-    pub student_registration: u32,
+    pub student_registration: String,
     pub course_name: String,
     pub course_period: u32,
     pub coffee_break: bool,
@@ -18,7 +18,9 @@ impl Registration {
             return Err("invalid_name");
         }
 
-        if self.student_registration < 100_000_000 || self.student_registration > 999_999_999 {
+        if self.student_registration.len() != 9
+            || !self.student_registration.chars().all(|c| c.is_ascii_digit())
+        {
             return Err("invalid_student_registration");
         }
 
