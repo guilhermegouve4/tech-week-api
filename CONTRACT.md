@@ -81,6 +81,10 @@
 ]
 ```
 
+- `200`
+- `401` `{ "error": "missing_token" }`
+- `401` `{ "error": "invalid_token" }`
+
 ---
 
 ## GET /projects — protected (JWT)
@@ -96,3 +100,7 @@
   }
 ]
 ```
+
+- `200`
+- `401` `{ "error": "missing_token" }`
+- `401` `{ "error": "invalid_token" }`
