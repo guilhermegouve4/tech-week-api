@@ -5,6 +5,8 @@ use axum::{
 use sqlx::SqlitePool;
 use tokio::net::TcpListener;
 use dotenvy;
+use tower_http::cors::{CorsLayer, Any};
+use axum::http::Method;
 use crate::{db::run_migrations, handlers::{admin_login, registrations, checkin, projects}};
 mod handlers;
 mod models;
@@ -13,13 +15,18 @@ mod db;
 #[tokio::main]
 async fn main() {
     dotenvy::dotenv().ok();
-    
+
     let connection =
         SqlitePool::connect("sqlite:db/weektech.db?mode=rwc")
             .await.expect("Failed while connecting to sqlite database");
     run_migrations(&connection)
         .await
         .expect("Failed while running migrations");
+
+    let cors = CorsLayer::new()
+        .allow_origin(Any)
+        .allow_methods([Method::GET, Method::POST, Method::DELETE])
+        .allow_headers(Any);
 
     let app = Router::new()
         .route("/checkin", post(checkin::checkin))
@@ -28,6 +35,7 @@ async fn main() {
         .route("/registrations/{ra}", delete(registrations::delete_registration))
         .route("/projects", post(projects::create_project).get(projects::list_projects))
         .route("/admin/login", post(admin_login::admin_login))
+        .layer(cors)
         .with_state(connection);
 
     let listener =
