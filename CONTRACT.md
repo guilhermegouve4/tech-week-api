@@ -13,8 +13,10 @@
 ```
 
 - `201`
-- `400` `{ "error": "missing_fields" }`
+- `400` `{ "error": "invalid_name" }`
 - `400` `{ "error": "invalid_student_registration" }`
+- `400` `{ "error": "invalid_course_name" }`
+- `400` `{ "error": "invalid_course_period" }`
 - `400` `{ "error": "ra_already_registered" }`
 
 ---
@@ -31,8 +33,10 @@
 ```
 
 - `200`
-- `400` `{ "error": "missing_fields" }`
+- `400` `{ "error": "invalid_submitter_name" }`
 - `400` `{ "error": "invalid_ra" }`
+- `400` `{ "error": "invalid_project_name" }`
+- `400` `{ "error": "invalid_description" }`
 - `400` `{ "error": "ra_not_found" }`
 
 ---
@@ -61,7 +65,6 @@
 ```
 
 - `200` `{ "token": "..."}`
-- `400` `{ "error": "missing_fields" }`
 - `401` `{ "error": "invalid_credentials" }`
 
 ---
