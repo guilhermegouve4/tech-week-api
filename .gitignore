@@ -2,3 +2,4 @@
 *.db
 PO_QUESTIONS.md
 .env
+src/gen_hash.rs
