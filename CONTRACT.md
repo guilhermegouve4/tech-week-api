@@ -12,9 +12,9 @@
 }
 ```
 
-- `200`
+- `201`
 - `400` `{ "error": "missing_fields" }`
-- `400` `{ "error": "invalid_ra" }`
+- `400` `{ "error": "invalid_student_registration" }`
 - `400` `{ "error": "ra_already_registered" }`
 
 ---
@@ -33,6 +33,7 @@
 - `200`
 - `400` `{ "error": "missing_fields" }`
 - `400` `{ "error": "invalid_ra" }`
+- `400` `{ "error": "ra_not_found" }`
 
 ---
 
@@ -45,7 +46,7 @@
 ```
 
 - `200`
-- `400` `{ "error": "invalid_ra" }`
+- `400` `{ "error": "invalid_student_registration" }`
 - `404` `{ "error": "ra_not_found" }`
 
 ---

@@ -21,7 +21,7 @@ Rust · Axum · SQLx · SQLite · Railway
 
 **registrations** — name, student_registration, course_name, course_period, coffee_break, checked_in
 
-**projects** — name, student_registration, project_name, description
+**projects** — id, submitter_name, submitter_registration, project_name, description
 
 ## Como rodar localmente
 
