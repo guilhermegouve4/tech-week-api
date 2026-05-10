@@ -1,7 +1,24 @@
 use axum::{Json, extract::State, http::StatusCode, response::{IntoResponse, Response}};
 use sqlx::SqlitePool;
 use serde_json::json;
-use crate::models::project::Project;
+use crate::models::project::{Project, ProjectRow};
+use crate::middleware::auth::AuthGuard;
+
+pub async fn list_projects(
+    _guard: AuthGuard,
+    State(pool): State<SqlitePool>,
+) -> Response {
+    let result = sqlx::query_as::<_, ProjectRow>(
+        "SELECT id, submitter_name, submitter_registration, project_name, description FROM projects"
+    )
+    .fetch_all(&pool)
+    .await;
+
+    match result {
+        Ok(rows) => (StatusCode::OK, Json(rows)).into_response(),
+        Err(_) => (StatusCode::INTERNAL_SERVER_ERROR, Json(json!({"error": "db_error"}))).into_response(),
+    }
+}
 
 pub async fn create_project(
     State(pool): State<SqlitePool>,

@@ -1,4 +1,5 @@
-use crate::models::registration::Registration;
+use crate::models::registration::{Registration, RegistrationRow};
+use crate::middleware::auth::AuthGuard;
 use axum::http::StatusCode;
 use axum::response::{IntoResponse, Response};
 use axum::extract::{State, Json, Path};
@@ -45,6 +46,22 @@ pub async fn register_student(
 
     match result {
         Ok(_) => (StatusCode::CREATED, Json(json!({"message": "registered"}))).into_response(),
+        Err(_) => (StatusCode::INTERNAL_SERVER_ERROR, Json(json!({"error": "db_error"}))).into_response(),
+    }
+}
+
+pub async fn list_registrations(
+    _guard: AuthGuard,
+    State(pool): State<SqlitePool>,
+) -> Response {
+    let result = sqlx::query_as::<_, RegistrationRow>(
+        "SELECT name, student_registration, course_name, course_period, coffee_break, checked_in FROM registrations"
+    )
+    .fetch_all(&pool)
+    .await;
+
+    match result {
+        Ok(rows) => (StatusCode::OK, Json(rows)).into_response(),
         Err(_) => (StatusCode::INTERNAL_SERVER_ERROR, Json(json!({"error": "db_error"}))).into_response(),
     }
 }

@@ -1,7 +1,16 @@
-use serde::Deserialize;
+use serde::{Deserialize, Serialize};
 
 #[derive(Deserialize)]
 pub struct Project {
+    pub submitter_name: String,
+    pub submitter_registration: String,
+    pub project_name: String,
+    pub description: String,
+}
+
+#[derive(Serialize, sqlx::FromRow)]
+pub struct ProjectRow {
+    pub id: i64,
     pub submitter_name: String,
     pub submitter_registration: String,
     pub project_name: String,

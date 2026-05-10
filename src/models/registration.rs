@@ -1,4 +1,4 @@
-use serde::Deserialize;
+use serde::{Deserialize, Serialize};
 
 #[derive(Deserialize)]
 pub struct Registration {
@@ -7,6 +7,16 @@ pub struct Registration {
     pub course_name: String,
     pub course_period: u32,
     pub coffee_break: bool,
+}
+
+#[derive(Serialize, sqlx::FromRow)]
+pub struct RegistrationRow {
+    pub name: String,
+    pub student_registration: String,
+    pub course_name: String,
+    pub course_period: i64,
+    pub coffee_break: bool,
+    pub checked_in: bool,
 }
 
 impl Registration {

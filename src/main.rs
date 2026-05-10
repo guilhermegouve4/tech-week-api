@@ -8,6 +8,7 @@ use dotenvy;
 use crate::{db::run_migrations, handlers::{admin_login, registrations, checkin, projects}};
 mod handlers;
 mod models;
+mod middleware;
 mod db;
 #[tokio::main]
 async fn main() {
@@ -23,9 +24,9 @@ async fn main() {
     let app = Router::new()
         .route("/checkin", post(checkin::checkin))
         .route("/checkin/{ra}", delete(checkin::undo_checkin))
-        .route("/registrations", post(registrations::register_student))
+        .route("/registrations", post(registrations::register_student).get(registrations::list_registrations))
         .route("/registrations/{ra}", delete(registrations::delete_registration))
-        .route("/projects", post(projects::create_project))
+        .route("/projects", post(projects::create_project).get(projects::list_projects))
         .route("/admin/login", post(admin_login::admin_login))
         .with_state(connection);
 
