@@ -4,6 +4,7 @@ use axum::{
 };
 use sqlx::SqlitePool;
 use tokio::net::TcpListener;
+use std::env::var;
 use dotenvy;
 use tower_http::cors::{CorsLayer, Any};
 use axum::http::Method;
@@ -15,9 +16,11 @@ mod db;
 #[tokio::main]
 async fn main() {
     dotenvy::dotenv().ok();
+    let db_url = 
+        var("DATABASE_URL").expect("Could not read database URL.");
 
     let connection =
-        SqlitePool::connect("sqlite:db/weektech.db?mode=rwc")
+        SqlitePool::connect(&db_url)
             .await.expect("Failed while connecting to sqlite database");
     run_migrations(&connection)
         .await
