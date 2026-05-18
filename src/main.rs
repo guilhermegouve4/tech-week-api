@@ -7,7 +7,7 @@ use tokio::net::TcpListener;
 use std::env::var;
 use dotenvy;
 use tower_http::cors::{CorsLayer, Any};
-use axum::http::Method;
+use axum::http::{Method, HeaderValue};
 use crate::{db::run_migrations, handlers::{admin_login, registrations, checkin, projects}};
 mod handlers;
 mod models;
@@ -27,7 +27,7 @@ async fn main() {
         .expect("Failed while running migrations");
 
     let cors = CorsLayer::new()
-        .allow_origin(Any)
+        .allow_origin("https://tech-week-client.vercel.app".parse::<HeaderValue>().unwrap())
         .allow_methods([Method::GET, Method::POST, Method::DELETE])
         .allow_headers(Any);
 
